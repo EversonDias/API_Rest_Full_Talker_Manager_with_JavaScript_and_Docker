@@ -1,5 +1,5 @@
 const { readFile, writeFile } = require('fs/promises');
-const {resolve} = require('path')
+const { resolve } = require('path');
 const { createToken } = require('./tools');
 
 const readAPI = async () => {
@@ -10,7 +10,21 @@ const readAPI = async () => {
   } catch (error) {
     console.error(`Error na leitura do arquivo: ${error}`);
   }
-}
+};
+
+const saveAPI = async (newDateAPI) => {
+  try {
+    const oldDataAPI = await readAPI();
+    const data = [...oldDataAPI, {
+      ...newDateAPI,
+      id: [...oldDataAPI].length + 1,
+  }];
+    await writeFile(resolve(__dirname, '../talker.json'), JSON.stringify(data));
+    return newDateAPI;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const searchById = async (id) => {
   try {
@@ -20,7 +34,7 @@ const searchById = async (id) => {
   } catch (error) {
     console.log(`Erro de leitura do arquivo ${error}`);
   }
-}
+};
 
 const readUser = async () => {
   try {
@@ -30,28 +44,29 @@ const readUser = async () => {
   } catch (error) {
     console.error(`Erro na escrita do arquivo ${error}`);
   }
-}
+};
 
 const saveUser = async (user) => {
   try {
-    const oldUser  = await readUser();
     const token = createToken(16);
     const newUser = {
       ...user,
       token,
     };
-    const dataUser = [...oldUser, newUser];
+    const dataUser = newUser;
     await writeFile(
       resolve(__dirname, '../login.json'),
-      JSON.stringify(dataUser)
+      JSON.stringify(dataUser),
     );
     return token;
   } catch (error) {
     console.error(`Error de Escrita de Arquivo, saveUser ${error}`);
   }
-}
+};
 module.exports = {
   readAPI,
   searchById,
   saveUser,
-}
+  saveAPI,
+  readUser,
+};
