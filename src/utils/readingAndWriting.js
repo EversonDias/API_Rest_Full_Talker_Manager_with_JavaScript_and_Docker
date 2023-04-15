@@ -1,5 +1,6 @@
-const { readFile } = require('fs/promises');
+const { readFile, writeFile } = require('fs/promises');
 const {resolve} = require('path')
+const { createToken } = require('./tools');
 
 const readAPI = async () => {
   try {
@@ -21,7 +22,36 @@ const searchById = async (id) => {
   }
 }
 
+const readUser = async () => {
+  try {
+    const dataUser = await readFile(resolve(__dirname, '../login.json'));
+    const data = JSON.parse(dataUser);
+    return data;
+  } catch (error) {
+    console.error(`Erro na escrita do arquivo ${error}`);
+  }
+}
+
+const saveUser = async (user) => {
+  try {
+    const oldUser  = await readUser();
+    const token = createToken(16);
+    const newUser = {
+      ...user,
+      token,
+    };
+    const dataUser = [...oldUser, newUser];
+    await writeFile(
+      resolve(__dirname, '../login.json'),
+      JSON.stringify(dataUser)
+    );
+    return token;
+  } catch (error) {
+    console.error(`Error de Escrita de Arquivo, saveUser ${error}`);
+  }
+}
 module.exports = {
   readAPI,
   searchById,
+  saveUser,
 }
