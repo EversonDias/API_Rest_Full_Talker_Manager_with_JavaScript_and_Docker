@@ -11,6 +11,17 @@ const readAPI = async () => {
   }
 }
 
+const searchById = async (id) => {
+  try {
+    const dataAPI = await readAPI();
+    const dataSelect = dataAPI.find((data) => data.id === Number(id));
+    return dataSelect;
+  } catch (error) {
+    console.log(`Erro de leitura do arquivo ${error}`);
+  }
+}
+
 module.exports = {
   readAPI,
+  searchById,
 }
