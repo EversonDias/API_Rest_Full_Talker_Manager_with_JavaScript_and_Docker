@@ -1,6 +1,5 @@
 const express = require('express');
-const { saveUser } = require('../utils/readingAndWriting');
-const { createToken } = require('../utils/tools');
+const { saveUser } = require('../utils/tools');
 const {
   isEmail,
   isPassword,
@@ -26,14 +25,5 @@ router.post(
   }
 },
 );
-
-router.get('/', async (_req, res) => {
-  try {
-    const token = createToken(16);
-    res.status(200).json({ token });
-  } catch (error) {
-    console.error(error);
-  }
-});
 
 module.exports = router;

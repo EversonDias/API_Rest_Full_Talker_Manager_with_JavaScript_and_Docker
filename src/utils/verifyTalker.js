@@ -1,5 +1,8 @@
+const { readAPI } = require('./tools');
+
 const status400 = 400;
 const status401 = 401;
+const status404 = 404;
 
 const hasAuthorization = (req, res, next) => {
   if (!['authorization'].every((key) => key in req.headers)) {
@@ -112,6 +115,17 @@ const verifyRate = (req, res, next) => {
   }
 };
 
+const hasId = async (req, res, next) => {
+  const { id } = req.params;
+  const talkers = await readAPI();
+  const keysId = talkers.map((talker) => talker.id);
+  if (!keysId.includes(id)) {
+    res.status(status404).send({ message: 'Pessoa palestrante não encontrada' });
+  } else {
+    next();
+  }
+};
+
 module.exports = {
   hasAuthorization,
   isAuthorization,
@@ -124,4 +138,5 @@ module.exports = {
   hasAge,
   verifyName,
   hasName,
+  hasId,
 };

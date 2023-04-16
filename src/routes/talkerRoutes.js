@@ -5,7 +5,8 @@ const {
   saveAPI,
   filterAPI,
   updateTalker,
-} = require('../utils/readingAndWriting');
+  searchByName,
+} = require('../utils/tools');
 const {
   hasAuthorization,
   isAuthorization,
@@ -18,6 +19,7 @@ const {
   hasAge,
   verifyName,
   hasName,
+  hasId,
 } = require('../utils/verifyTalker');
 
 const router = express.Router();
@@ -31,7 +33,7 @@ router.get('/', async (_req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { id } = req.params;
     const data = await searchById(id);
@@ -69,7 +71,7 @@ router.post(
 );
 
 router.put(
-  '/:id',
+  '/',
   hasAuthorization,
   isAuthorization,
   hasName,
@@ -81,6 +83,7 @@ router.put(
   hasWatchedAt,
   verifyWatchedAt,
   verifyRate,
+  hasId,
   async (req, res) => {
   try {
     const { id } = req.params;
@@ -88,6 +91,40 @@ router.put(
     const dataFilter = await filterAPI(id);
     const data = await updateTalker(newTalker, id, dataFilter);
     res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+  }
+},
+);
+
+router.delete(
+  '/',
+  hasAuthorization,
+  isAuthorization,
+  async (req, res) => {
+  try {
+    const { id } = req.params;
+    await filterAPI(id);
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+  }
+},
+);
+
+router.get(
+  '/search',
+  hasAuthorization,
+  isAuthorization,
+  async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (q === '') {
+      const listOfTalkers = await readAPI();
+      return res.status(200).json(listOfTalkers);
+    }
+    const listOfTalkers = await searchByName(q);
+    res.status(200).json(listOfTalkers);
   } catch (error) {
     console.error(error);
   }
