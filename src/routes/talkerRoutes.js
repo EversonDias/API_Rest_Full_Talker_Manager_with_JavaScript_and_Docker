@@ -1,5 +1,11 @@
 const express = require('express');
-const { readAPI, searchById, saveAPI } = require('../utils/readingAndWriting');
+const { 
+  readAPI,
+  searchById,
+  saveAPI,
+  filterAPI,
+  updateTalker,
+} = require('../utils/readingAndWriting');
 const {
   hasAuthorization,
   isAuthorization,
@@ -56,6 +62,32 @@ router.post(
     const newTalker = req.body;
     const data = await saveAPI(newTalker);
     res.status(201).json(data);
+  } catch (error) {
+    console.error(error);
+  }
+},
+);
+
+router.put(
+  '/:id',
+  hasAuthorization,
+  isAuthorization,
+  hasName,
+  verifyName,
+  hasAge,
+  verifyAge,
+  hasTalk,
+  hasRate,
+  hasWatchedAt,
+  verifyWatchedAt,
+  verifyRate,
+  async (req, res) => {
+  try {
+    const { id } = req.params;
+    const newTalker = req.body;
+    const dataFilter = await filterAPI(id);
+    const data = await updateTalker(newTalker, id, dataFilter);
+    res.status(200).json(data);
   } catch (error) {
     console.error(error);
   }

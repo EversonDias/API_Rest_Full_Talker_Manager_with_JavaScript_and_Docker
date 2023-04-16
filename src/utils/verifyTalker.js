@@ -91,8 +91,7 @@ const verifyWatchedAt = (req, res, next) => {
 const hasRate = (req, res, next) => {
   const { talk } = req.body;
   const hasKeyRate = !['rate'].every((key) => key in talk);
-  const hasValue = !talk.rate !== '';
-  if (hasKeyRate || hasValue) {
+  if (hasKeyRate) {
     res.status(status400).send({ message: 'O campo "rate" é obrigatório' });
   } else {
     next();

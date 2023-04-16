@@ -63,10 +63,37 @@ const saveUser = async (user) => {
     console.error(`Error de Escrita de Arquivo, saveUser ${error}`);
   }
 };
+
+const filterAPI = async (id) => {
+  try {
+    const dataAPI = await readAPI();
+    const dataFilter = dataAPI.filter((data) => data.id !== id);
+    return dataFilter;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const updateTalker = async (newTalker, id, oldTalker) => {
+  try {
+    const talker = {
+      ...newTalker,
+      id,
+    };
+    const newListTalkers = [...oldTalker, talker];
+    await writeFile(resolve(__dirname, '../talker.json'), JSON.stringify(newListTalkers));
+    return talker;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 module.exports = {
   readAPI,
   searchById,
   saveUser,
   saveAPI,
   readUser,
+  filterAPI,
+  updateTalker,
 };
