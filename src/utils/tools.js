@@ -10,16 +10,6 @@ const createToken = (length) => {
   return data;
 };
 
-const createId = (listTalkers) => {
-  let maxId = 0;
-  listTalkers.forEach(({ id }) => {
-    if (maxId < id) {
-      maxId = id;
-    }
-  });
-  return maxId + 1;
-};
-
 const readAPI = async () => {
   try {
     const dataAPI = await readFile(resolve(__dirname, '../talker.json'));
@@ -33,12 +23,13 @@ const readAPI = async () => {
 const saveAPI = async (newDateAPI) => {
   try {
     const oldDataAPI = await readAPI();
-    const data = [...oldDataAPI, {
+    const newTalker = {
       ...newDateAPI,
-      id: createId(oldDataAPI),
-  }];
+      id: [...oldDataAPI].length + 1,
+  };
+    const data = [...oldDataAPI, newTalker];
     await writeFile(resolve(__dirname, '../talker.json'), JSON.stringify(data));
-    return newDateAPI;
+    return newTalker;
   } catch (error) {
     console.error(error);
   }
@@ -61,23 +52,6 @@ const readUser = async () => {
     return data;
   } catch (error) {
     console.error(`Erro na escrita do arquivo ${error}`);
-  }
-};
-
-const saveUser = async (user) => {
-  try {
-    const token = createToken(16);
-    const newUser = {
-      ...user,
-      token,
-    };
-    await writeFile(
-      resolve(__dirname, '../login.json'),
-      JSON.stringify([newUser]),
-    );
-    return token;
-  } catch (error) {
-    console.error(`Error de Escrita de Arquivo, saveUser ${error}`);
   }
 };
 
@@ -118,7 +92,6 @@ const searchByName = async (name) => {
 module.exports = {
   readAPI,
   searchById,
-  saveUser,
   saveAPI,
   readUser,
   filterAPI,
