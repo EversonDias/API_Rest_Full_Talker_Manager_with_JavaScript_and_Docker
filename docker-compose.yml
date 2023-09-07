@@ -18,33 +18,15 @@ services:
       # Monta o diretório /src, com o código da aplicação, 
       # dentro do diretório /app
       - ./src:/app/src
+    command: npm run dev
     # Lista de portas mapeadas de dentro para fora do container
     # na notação porta_de_fora:porta_de_dentro
     ports:
       # Expõe a porta padrão da aplicação: altere aqui caso use outra porta
       - 3001:3001
-      - 9229:9229
     # Variáveis de ambiente para comunicação com o banco de dados (requisito 12)
     environment:
       PORT: 3001
-      MYSQL_HOSTNAME: db
-      MYSQL_PORT: 3307
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: TalkerDB
-
-  db:
-    container_name: talker_manager_db
-    image: mysql:8.0.32
-    restart: always
-    ports:
-      # Expõe a porta padrão do banco de dados
-      - 3307:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: TalkerDB
-    volumes:
-      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
 
 networks:
   default:
