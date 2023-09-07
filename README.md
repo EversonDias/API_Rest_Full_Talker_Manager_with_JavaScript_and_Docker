@@ -46,7 +46,7 @@ Para acessar e executar este projeto, siga os passos abaixo:
 2. Clone o Projeto
 
 ```bash
-git clone  TalkerManager
+git clone https://github.com/EversonDias/API_Rest_Full_Talker_Manager_with_JavaScript_and_Docker.git TalkerManager
 ```
 
 3. Entre no projeto
